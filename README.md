@@ -194,6 +194,7 @@ function follow(id) {
 ```
 
 
+
 ### Redirect to another page
 
 ```javascript
