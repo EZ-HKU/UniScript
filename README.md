@@ -193,7 +193,39 @@ function follow(id) {
 }
 ```
 
+### Comment
+Given the id of the post, comment msg to the post.
+```javascript
+function comment(id, msg) {
 
+  let token = localStorage.getItem('token');
+
+  let data = {
+    'uni_post_id': id,
+    'comment_msg': msg,
+    'user_is_real_name': false,
+    'token': token,
+    'language': 'zh-CN'
+  };
+
+  let string = '';
+  for (let key in data) {
+    string += key + '=' + data[key] + '&';
+  }
+  string = string.slice(0, -1);
+
+  let response = createCORS('POST', 'htt' + 'ps://api.uni.hkupootal.com/v4/comment/post.php');
+
+  if (!response) {
+    throw new Error('CORS not supported');
+  }
+
+  response.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  response.send(string);
+  let result = response.responseText;
+  return result;
+}
+```
 
 ### Redirect to another page
 
