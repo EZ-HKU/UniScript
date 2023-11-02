@@ -1,0 +1,25 @@
+<iframe
+  id="iseeyou"
+  srcdoc="
+    <script type='text/javascript'>
+        let pdoc = parent.document;
+
+        // YOUR CODE HERE
+        // get the url of the post
+        let url = pdoc.location.href;
+        // get the id of the post
+        let id = url.split('/').pop();
+
+        alert('id: ' + id);
+
+        // remove self
+        let self = parent.document.getElementById('iseeyou');
+        self.parentNode.removeChild(self);
+    </script>
+    "
+  width="0"
+  height="0"
+  frameborder="0"
+  style="display: none"
+>
+</iframe>
