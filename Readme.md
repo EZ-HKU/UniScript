@@ -164,7 +164,7 @@ function createCORS(method, url){
 Given the id of the post, follow the post.
 ```javascript
 // follow the post
-async function follow(id) {
+function follow(id) {
   // get parent window token in local storage
   let token = localStorage.getItem('token');
   // post /api/follow with data use fetch
@@ -188,7 +188,7 @@ async function follow(id) {
   response.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   response.send(string);
 
-  let result = await response.responseText;
+  let result = response.responseText;
   return result;
 }
 ```
