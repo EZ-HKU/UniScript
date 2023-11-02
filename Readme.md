@@ -1,8 +1,12 @@
 # TripleUni - Script
+
 ## How to use
+
 ### 1. Copy the code below
+
 The code below is a template. You can copy it and paste it to tripleuni.
-``` html
+
+```html
 <iframe
   id="iseeyou"
   srcdoc="
@@ -23,8 +27,10 @@ The code below is a template. You can copy it and paste it to tripleuni.
 >
 </iframe>
 ```
+
 ### 2. Replace `YOUR CODE HERE` with your own code
-``` html
+
+```html
 <iframe
   id="iseeyou"
   srcdoc="
@@ -45,19 +51,24 @@ The code below is a template. You can copy it and paste it to tripleuni.
 >
 </iframe>
 ```
-* Please note that you can't use `document` to get the document of the parent page(page of tripleuni). You should use `pdoc` instead. `pdoc` is the document of the parent page. You can use it to edit the html.
-* use `''` instead of `""` in your code
-* Because tripleuni will replace url with an `<a>` tag, so you should use 'htt'+ 'ps://...' instead of 'https://...'
+
+- Please note that you can't use `document` to get the document of the parent page(page of tripleuni). You should use `pdoc` instead. `pdoc` is the document of the parent page. You can use it to edit the html.
+- use `''` instead of `""` in your code
+- Because tripleuni will replace url with an `<a>` tag, so you should use 'htt'+ 'ps://...' instead of 'https://...'
 
 ### 3. Paste the code to tripleuni and publish it
-* Paste the code to tripleuni
-* Click the publish button
-* The script will run when you open your post on tripleuni
+
+- Paste the code to tripleuni
+- Click the publish button
+- The script will run when you open your post on tripleuni
 
 ## Examples
+
 You can edit the html with js. The `pdoc` variable is the document of the parent page(page of tripleuni). You can use it to edit the html.
+
 ### Edit the html
-``` javascript
+
+```javascript
 // replace body with your own html
 pdoc.body.innerHTML = `
         <head>
@@ -76,24 +87,116 @@ pdoc.body.innerHTML = `
         `;
 ```
 
-### Send a request
-``` javascript
-// send a request
-let xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://www.baidu.com');
-xhr.send();
-```
-
-### Redirect to another page
-``` javascript
-// redirect to another page
-pdoc.location.href = 'https://www.baidu.com';
-```
 
 ### Get the id of the post
-``` javascript
-// get the url of the post
-let url = pdoc.location.href;
-// get the id of the post
-let id = url.split('/').pop();
+
+```javascript
+function getPostId() {
+  // get the url of the post
+  let url = pdoc.location.href;
+  // get the id of the post
+  let id = url.split('/').pop();
+  return id;
+}
+```
+
+### Get token
+get token for sending data to tripleuni
+````javascript
+let headers = {
+  'Content-Type': 'application/json',
+  'authority': 'stat.uni.hkupootal.com',
+  'method': 'POST',
+  'path': '/api/send',
+  'scheme': 'https',
+  'Origin': 'htt'+'ps://tripleuni.com',
+  'Referer': 'htt'+'ps://tripleuni.com',
+  'Sec-Fetch-Dest': 'empty',
+  'Sec-Fetch-Mode': 'cors',
+  'Sec-Fetch-Site': 'cross-site'
+
+};
+
+async function getTokenFor(url) {
+  // post /api/send with data use fetch
+  let data = JSON.stringify({
+    'type':'event',
+    'payload':{
+      'website':'a9ae199b-66c0-4982-b021-0c8a6ade8691',
+      'hostname':'tripleuni.com',
+      'screen':'1536x864',
+      'language':'zh-CN',
+      'title':'主页 / HKU噗噗',
+      'url':url,
+      'referrer':'/home'
+      }
+    });
+
+  let response = await fetch('htt'+'ps://stat.uni.hkupootal.com/api/send', {
+    method: 'POST',
+    headers: headers,
+    body: data
+  });
+
+  let token = await response.text();
+  return token;
+}
+
+````
+
+### CORS
+```javascript
+function createCORS(method, url){
+    var xhr = new XMLHttpRequest();
+    if('withCredentials' in xhr){
+        xhr.open(method, url, true);
+    }else if(typeof XDomainRequest != 'undefined'){
+        var xhr = new XDomainRequest();
+        xhr.open(method, url);
+    }else{
+        xhr = null;
+    }
+    return xhr;
+}
+```
+
+### Follow
+
+```javascript
+// follow the post
+async function follow(id) {
+  // get parent window token in local storage
+  let token = localStorage.getItem('token');
+  // post /api/follow with data use fetch
+  let data = {
+    'uni_post_id': id,
+    'token': token,
+    'language': 'zh-CN'
+    };
+  
+  let string = '';
+  for (let key in data) {
+    string += key + '=' + data[key] + '&';
+  }
+  string = string.slice(0, -1);
+
+  let response = createCORS('POST', 'htt'+'ps://api.uni.hkupootal.com/v4/post/single/follow.php');
+  if (!response) {
+    throw new Error('CORS not supported');
+  }
+
+  response.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  response.send(string);
+
+  let result = await response.responseText;
+  return result;
+}
+```
+
+
+### Redirect to another page
+
+```javascript
+// redirect to another page
+pdoc.location.href = 'htt'+'ps://www.baidu.com';
 ```
