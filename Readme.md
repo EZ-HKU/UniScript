@@ -89,7 +89,6 @@ pdoc.body.innerHTML = `
 
 
 ### Get the id of the post
-
 ```javascript
 function getPostId() {
   // get the url of the post
@@ -101,7 +100,7 @@ function getPostId() {
 ```
 
 ### Get token
-get token for sending data to tripleuni
+Get token for sending data to tripleuni
 ````javascript
 let headers = {
   'Content-Type': 'application/json',
@@ -145,6 +144,7 @@ async function getTokenFor(url) {
 ````
 
 ### CORS
+Because tripleuni is not in the same domain with the api of HKU噗噗, you can't use fetch to send data to the api. You should use CORS instead.
 ```javascript
 function createCORS(method, url){
     var xhr = new XMLHttpRequest();
@@ -161,7 +161,7 @@ function createCORS(method, url){
 ```
 
 ### Follow
-
+Given the id of the post, follow the post.
 ```javascript
 // follow the post
 async function follow(id) {
