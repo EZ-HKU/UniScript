@@ -1,5 +1,16 @@
 # TripleUni - Script
 
+## 声明
+* 以下测试均在私密树洞进行，未进行大规模传播。
+* 本测试旨在web安全学习，不会用于任何非法用途，也未对任何人或组织造成任何损失。
+* 以下脚本在当前版本的TripleUni上均已失效，仅供学习参考。
+* **事实证明防止html注入真的很重要（doge）**
+
+## What is it?
+The script can `inject js code to tripleuni`. You can use it to edit the html of tripleuni, get the id of the post, auto follow the post, comment to the post, post, self-replication, redirect to another page and so on. `Basically, you can do anything you want`.
+
+* TIPS: Only work for web version of tripleuni.
+
 ## How to use
 
 ### 1. Copy the code below
